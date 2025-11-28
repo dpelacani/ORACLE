@@ -1,0 +1,146 @@
+[
+  {
+    "code": "62-00",
+    "label": "General reference works (handbooks, dictionaries, bibliographies, etc.) pertaining to statistics",
+    "description": "General reference works (handbooks, dictionaries, bibliographies, etc.) pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-01",
+    "label": "Introductory exposition (textbooks, tutorial papers, etc.) pertaining to statistics",
+    "description": "Introductory exposition (textbooks, tutorial papers, etc.) pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-02",
+    "label": "Research exposition (monographs, survey articles) pertaining to statistics",
+    "description": "Research exposition (monographs, survey articles) pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-03",
+    "label": "History of statistics",
+    "description": "History of statistics [Consider also classification numbers from Section 01-XX]",
+    "child_file": null
+  },
+  {
+    "code": "62-04",
+    "label": "Software, source code, etc. for problems pertaining to statistics",
+    "description": "Software, source code, etc. for problems pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-06",
+    "label": "Proceedings, conferences, collections, etc. pertaining to statistics",
+    "description": "Proceedings, conferences, collections, etc. pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-08",
+    "label": "Computational methods for problems pertaining to statistics",
+    "description": "Computational methods for problems pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62-11",
+    "label": "Research data for problems pertaining to statistics",
+    "description": "Research data for problems pertaining to statistics",
+    "child_file": null
+  },
+  {
+    "code": "62Axx",
+    "label": "Foundational topics in statistics",
+    "description": "Foundational topics in statistics",
+    "child_file": "msc_62Axx_level_3.json"
+  },
+  {
+    "code": "62Bxx",
+    "label": "Sufficiency and information",
+    "description": "Sufficiency and information",
+    "child_file": "msc_62Bxx_level_3.json"
+  },
+  {
+    "code": "62Cxx",
+    "label": "Statistical decision theory",
+    "description": "Statistical decision theory [See also 90B50, 91B06] \\{For game theory, see 91A35\\}",
+    "child_file": "msc_62Cxx_level_3.json"
+  },
+  {
+    "code": "62Dxx",
+    "label": "Statistical sampling theory and related topics",
+    "description": "Statistical sampling theory and related topics",
+    "child_file": "msc_62Dxx_level_3.json"
+  },
+  {
+    "code": "62Exx",
+    "label": "Statistical distribution theory",
+    "description": "Statistical distribution theory [See also 60Exx]",
+    "child_file": "msc_62Exx_level_3.json"
+  },
+  {
+    "code": "62Fxx",
+    "label": "Parametric inference",
+    "description": "Parametric inference",
+    "child_file": "msc_62Fxx_level_3.json"
+  },
+  {
+    "code": "62Gxx",
+    "label": "Nonparametric inference",
+    "description": "Nonparametric inference",
+    "child_file": "msc_62Gxx_level_3.json"
+  },
+  {
+    "code": "62Hxx",
+    "label": "Multivariate analysis",
+    "description": "Multivariate analysis [See also 60Exx]",
+    "child_file": "msc_62Hxx_level_3.json"
+  },
+  {
+    "code": "62Jxx",
+    "label": "Linear inference, regression",
+    "description": "Linear inference, regression",
+    "child_file": "msc_62Jxx_level_3.json"
+  },
+  {
+    "code": "62Kxx",
+    "label": "Design of statistical experiments",
+    "description": "Design of statistical experiments [See also 05Bxx]",
+    "child_file": "msc_62Kxx_level_3.json"
+  },
+  {
+    "code": "62Lxx",
+    "label": "Sequential statistical methods",
+    "description": "Sequential statistical methods",
+    "child_file": "msc_62Lxx_level_3.json"
+  },
+  {
+    "code": "62Mxx",
+    "label": "Inference from stochastic processes",
+    "description": "Inference from stochastic processes",
+    "child_file": "msc_62Mxx_level_3.json"
+  },
+  {
+    "code": "62Nxx",
+    "label": "Survival analysis and censored data",
+    "description": "Survival analysis and censored data",
+    "child_file": "msc_62Nxx_level_3.json"
+  },
+  {
+    "code": "62Pxx",
+    "label": "Applications of statistics",
+    "description": "Applications of statistics [See also 90-XX, 91-XX, 92-XX]",
+    "child_file": "msc_62Pxx_level_3.json"
+  },
+  {
+    "code": "62Qxx",
+    "label": "Statistical tables",
+    "description": "Statistical tables",
+    "child_file": "msc_62Qxx_level_3.json"
+  },
+  {
+    "code": "62Rxx",
+    "label": "Statistics on algebraic and topological structures",
+    "description": "Statistics on algebraic and topological structures",
+    "child_file": "msc_62Rxx_level_3.json"
+  }
+]

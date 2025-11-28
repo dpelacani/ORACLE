@@ -1,0 +1,164 @@
+[
+  {
+    "code": "65-00",
+    "label": "General reference works (handbooks, dictionaries, bibliographies, etc.) pertaining to numerical analysis",
+    "description": "General reference works (handbooks, dictionaries, bibliographies, etc.) pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65-01",
+    "label": "Introductory exposition (textbooks, tutorial papers, etc.) pertaining to numerical analysis",
+    "description": "Introductory exposition (textbooks, tutorial papers, etc.) pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65-02",
+    "label": "Research exposition (monographs, survey articles) pertaining to numerical analysis",
+    "description": "Research exposition (monographs, survey articles) pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65-03",
+    "label": "History of numerical analysis",
+    "description": "History of numerical analysis [Consider also classification numbers from Section 01-XX]",
+    "child_file": null
+  },
+  {
+    "code": "65-04",
+    "label": "Software, source code, etc. for problems pertaining to numerical analysis",
+    "description": "Software, source code, etc. for problems pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65-06",
+    "label": "Proceedings, conferences, collections, etc. pertaining to numerical analysis",
+    "description": "Proceedings, conferences, collections, etc. pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65-11",
+    "label": "Research data for problems pertaining to numerical analysis",
+    "description": "Research data for problems pertaining to numerical analysis",
+    "child_file": null
+  },
+  {
+    "code": "65Axx",
+    "label": "Tables in numerical analysis",
+    "description": "Tables in numerical analysis",
+    "child_file": "msc_65Axx_level_3.json"
+  },
+  {
+    "code": "65Bxx",
+    "label": "Acceleration of convergence in numerical analysis",
+    "description": "Acceleration of convergence in numerical analysis",
+    "child_file": "msc_65Bxx_level_3.json"
+  },
+  {
+    "code": "65Cxx",
+    "label": "Probabilistic methods, stochastic differential equations",
+    "description": "Probabilistic methods, stochastic differential equations",
+    "child_file": "msc_65Cxx_level_3.json"
+  },
+  {
+    "code": "65Dxx",
+    "label": "Numerical approximation and computational geometry (primarily algorithms)",
+    "description": "Numerical approximation and computational geometry (primarily algorithms) \\{For theoretical aspects, see 41-XX, 68Uxx\\}",
+    "child_file": "msc_65Dxx_level_3.json"
+  },
+  {
+    "code": "65Exx",
+    "label": "Numerical methods in complex analysis (potential theory, etc.)",
+    "description": "Numerical methods in complex analysis (potential theory, etc.)",
+    "child_file": "msc_65Exx_level_3.json"
+  },
+  {
+    "code": "65Fxx",
+    "label": "Numerical linear algebra",
+    "description": "Numerical linear algebra",
+    "child_file": "msc_65Fxx_level_3.json"
+  },
+  {
+    "code": "65Gxx",
+    "label": "Error analysis and interval analysis",
+    "description": "Error analysis and interval analysis",
+    "child_file": "msc_65Gxx_level_3.json"
+  },
+  {
+    "code": "65Hxx",
+    "label": "Nonlinear algebraic or transcendental equations",
+    "description": "Nonlinear algebraic or transcendental equations",
+    "child_file": "msc_65Hxx_level_3.json"
+  },
+  {
+    "code": "65Jxx",
+    "label": "Numerical analysis in abstract spaces",
+    "description": "Numerical analysis in abstract spaces",
+    "child_file": "msc_65Jxx_level_3.json"
+  },
+  {
+    "code": "65Kxx",
+    "label": "Numerical methods for mathematical programming, optimization and variational techniques",
+    "description": "Numerical methods for mathematical programming, optimization and variational techniques",
+    "child_file": "msc_65Kxx_level_3.json"
+  },
+  {
+    "code": "65Lxx",
+    "label": "Numerical methods for ordinary differential equations",
+    "description": "Numerical methods for ordinary differential equations",
+    "child_file": "msc_65Lxx_level_3.json"
+  },
+  {
+    "code": "65Mxx",
+    "label": "Numerical methods for partial differential equations, initial value and time-dependent initial-boundary value problems",
+    "description": "Numerical methods for partial differential equations, initial value and time-dependent initial-boundary value problems",
+    "child_file": "msc_65Mxx_level_3.json"
+  },
+  {
+    "code": "65Nxx",
+    "label": "Numerical methods for partial differential equations, boundary value problems",
+    "description": "Numerical methods for partial differential equations, boundary value problems",
+    "child_file": "msc_65Nxx_level_3.json"
+  },
+  {
+    "code": "65Pxx",
+    "label": "Numerical problems in dynamical systems",
+    "description": "Numerical problems in dynamical systems [See also 37Mxx]",
+    "child_file": "msc_65Pxx_level_3.json"
+  },
+  {
+    "code": "65Qxx",
+    "label": "Numerical methods for difference and functional equations, recurrence relations",
+    "description": "Numerical methods for difference and functional equations, recurrence relations",
+    "child_file": "msc_65Qxx_level_3.json"
+  },
+  {
+    "code": "65Rxx",
+    "label": "Numerical methods for integral equations, integral transforms",
+    "description": "Numerical methods for integral equations, integral transforms",
+    "child_file": "msc_65Rxx_level_3.json"
+  },
+  {
+    "code": "65Sxx",
+    "label": "Graphical methods in numerical analysis",
+    "description": "Graphical methods in numerical analysis",
+    "child_file": "msc_65Sxx_level_3.json"
+  },
+  {
+    "code": "65Txx",
+    "label": "Numerical methods in Fourier analysis",
+    "description": "Numerical methods in Fourier analysis",
+    "child_file": "msc_65Txx_level_3.json"
+  },
+  {
+    "code": "65Yxx",
+    "label": "Computer aspects of numerical algorithms",
+    "description": "Computer aspects of numerical algorithms",
+    "child_file": "msc_65Yxx_level_3.json"
+  },
+  {
+    "code": "65Zxx",
+    "label": "Applications to the sciences",
+    "description": "Applications to the sciences",
+    "child_file": "msc_65Zxx_level_3.json"
+  }
+]

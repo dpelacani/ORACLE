@@ -1,0 +1,380 @@
+[
+  {
+    "code": "00",
+    "label": "General and overarching topics; collections",
+    "description": "General and overarching topics; collections",
+    "child_file": "msc_00_level_2.json"
+  },
+  {
+    "code": "01",
+    "label": "History and biography",
+    "description": "History and biography [See also the classification number --03 in the other sections]",
+    "child_file": "msc_01_level_2.json"
+  },
+  {
+    "code": "03",
+    "label": "Mathematical logic and foundations",
+    "description": "Mathematical logic and foundations",
+    "child_file": "msc_03_level_2.json"
+  },
+  {
+    "code": "05",
+    "label": "Combinatorics",
+    "description": "Combinatorics \\{For finite fields, see 11Txx\\}",
+    "child_file": "msc_05_level_2.json"
+  },
+  {
+    "code": "06",
+    "label": "Order, lattices, ordered algebraic structures",
+    "description": "Order, lattices, ordered algebraic structures [See also 18B35]",
+    "child_file": "msc_06_level_2.json"
+  },
+  {
+    "code": "08",
+    "label": "General algebraic systems",
+    "description": "General algebraic systems",
+    "child_file": "msc_08_level_2.json"
+  },
+  {
+    "code": "11",
+    "label": "Number theory",
+    "description": "Number theory",
+    "child_file": "msc_11_level_2.json"
+  },
+  {
+    "code": "12",
+    "label": "Field theory and polynomials",
+    "description": "Field theory and polynomials",
+    "child_file": "msc_12_level_2.json"
+  },
+  {
+    "code": "13",
+    "label": "Commutative algebra",
+    "description": "Commutative algebra",
+    "child_file": "msc_13_level_2.json"
+  },
+  {
+    "code": "14",
+    "label": "Algebraic geometry",
+    "description": "Algebraic geometry",
+    "child_file": "msc_14_level_2.json"
+  },
+  {
+    "code": "15",
+    "label": "Linear and multilinear algebra; matrix theory",
+    "description": "Linear and multilinear algebra; matrix theory",
+    "child_file": "msc_15_level_2.json"
+  },
+  {
+    "code": "16",
+    "label": "Associative rings and algebras",
+    "description": "Associative rings and algebras \\{For the commutative case, see 13-XX\\}",
+    "child_file": "msc_16_level_2.json"
+  },
+  {
+    "code": "17",
+    "label": "Nonassociative rings and algebras",
+    "description": "Nonassociative rings and algebras",
+    "child_file": "msc_17_level_2.json"
+  },
+  {
+    "code": "18",
+    "label": "Category theory; homological algebra",
+    "description": "Category theory; homological algebra \\{For commutative rings, see 13Dxx; for associative rings, see 16Exx; for groups, see 20Jxx; for topological groups and related structures, see 57Txx; for algebraic topology, see also 55Nxx, 55Uxx\\}",
+    "child_file": "msc_18_level_2.json"
+  },
+  {
+    "code": "19",
+    "label": "\\(K\\)-theory",
+    "description": "\\(K\\)-theory [See also 16E20, 18F25]",
+    "child_file": "msc_19_level_2.json"
+  },
+  {
+    "code": "20",
+    "label": "Group theory and generalizations",
+    "description": "Group theory and generalizations",
+    "child_file": "msc_20_level_2.json"
+  },
+  {
+    "code": "22",
+    "label": "Topological groups, Lie groups",
+    "description": "Topological groups, Lie groups \\{For transformation groups, see 54H15, 57Sxx, 58-XX; for abstract harmonic analysis, see 43-XX\\}",
+    "child_file": "msc_22_level_2.json"
+  },
+  {
+    "code": "26",
+    "label": "Real functions",
+    "description": "Real functions [See also 54C30]",
+    "child_file": "msc_26_level_2.json"
+  },
+  {
+    "code": "28",
+    "label": "Measure and integration",
+    "description": "Measure and integration \\{For analysis on manifolds, see 58-XX\\}",
+    "child_file": "msc_28_level_2.json"
+  },
+  {
+    "code": "30",
+    "label": "Functions of a complex variable",
+    "description": "Functions of a complex variable",
+    "child_file": "msc_30_level_2.json"
+  },
+  {
+    "code": "31",
+    "label": "Potential theory",
+    "description": "Potential theory \\{For probabilistic potential theory, see 60J45\\}",
+    "child_file": "msc_31_level_2.json"
+  },
+  {
+    "code": "32",
+    "label": "Several complex variables and analytic spaces",
+    "description": "Several complex variables and analytic spaces \\{For infinite-dimensional holomorphy, see also 46G20, 58B12\\}",
+    "child_file": "msc_32_level_2.json"
+  },
+  {
+    "code": "33",
+    "label": "Special functions",
+    "description": "Special functions (33-XX deals with the properties of functions as functions) \\{For orthogonal functions, see 42Cxx; for aspects of combinatorics, see 05Axx; for number-theoretic aspects, see 11-XX; for representation theory, see 22Exx\\}",
+    "child_file": "msc_33_level_2.json"
+  },
+  {
+    "code": "34",
+    "label": "Ordinary differential equations",
+    "description": "Ordinary differential equations",
+    "child_file": "msc_34_level_2.json"
+  },
+  {
+    "code": "35",
+    "label": "Partial differential equations",
+    "description": "Partial differential equations",
+    "child_file": "msc_35_level_2.json"
+  },
+  {
+    "code": "37",
+    "label": "Dynamical systems and ergodic theory",
+    "description": "Dynamical systems and ergodic theory [See also 26A18, 28Dxx, 34Cxx, 34Dxx, 35Bxx, 46Lxx, 58Jxx, 70-XX]",
+    "child_file": "msc_37_level_2.json"
+  },
+  {
+    "code": "39",
+    "label": "Difference and functional equations",
+    "description": "Difference and functional equations",
+    "child_file": "msc_39_level_2.json"
+  },
+  {
+    "code": "40",
+    "label": "Sequences, series, summability",
+    "description": "Sequences, series, summability",
+    "child_file": "msc_40_level_2.json"
+  },
+  {
+    "code": "41",
+    "label": "Approximations and expansions",
+    "description": "Approximations and expansions \\{For approximation theory in the complex domain, see 30E05, 30E10; for trigonometric approximation and interpolation, see 42A10, 42A15; for numerical approximation, see 65Dxx\\}",
+    "child_file": "msc_41_level_2.json"
+  },
+  {
+    "code": "42",
+    "label": "Harmonic analysis on Euclidean spaces",
+    "description": "Harmonic analysis on Euclidean spaces",
+    "child_file": "msc_42_level_2.json"
+  },
+  {
+    "code": "43",
+    "label": "Abstract harmonic analysis",
+    "description": "Abstract harmonic analysis \\{For other analysis on topological and Lie groups, see 22Exx\\}",
+    "child_file": "msc_43_level_2.json"
+  },
+  {
+    "code": "44",
+    "label": "Integral transforms, operational calculus",
+    "description": "Integral transforms, operational calculus \\{For fractional derivatives and integrals, see 26A33; for Fourier transforms, see 42A38, 42B10; for integral transforms in distribution spaces, see 46F12; for numerical methods, see 65R10\\}",
+    "child_file": "msc_44_level_2.json"
+  },
+  {
+    "code": "45",
+    "label": "Integral equations",
+    "description": "Integral equations",
+    "child_file": "msc_45_level_2.json"
+  },
+  {
+    "code": "46",
+    "label": "Functional analysis",
+    "description": "Functional analysis \\{For manifolds modeled on topological linear spaces, see 57Nxx, 58Bxx\\}",
+    "child_file": "msc_46_level_2.json"
+  },
+  {
+    "code": "47",
+    "label": "Operator theory",
+    "description": "Operator theory",
+    "child_file": "msc_47_level_2.json"
+  },
+  {
+    "code": "49",
+    "label": "Calculus of variations and optimal control; optimization",
+    "description": "Calculus of variations and optimal control; optimization [See also 34H05, 34K35, 65Kxx, 90Cxx, 93-XX]",
+    "child_file": "msc_49_level_2.json"
+  },
+  {
+    "code": "51",
+    "label": "Geometry",
+    "description": "Geometry \\{For algebraic geometry, see 14-XX; for differential geometry, see 53-XX\\}",
+    "child_file": "msc_51_level_2.json"
+  },
+  {
+    "code": "52",
+    "label": "Convex and discrete geometry",
+    "description": "Convex and discrete geometry",
+    "child_file": "msc_52_level_2.json"
+  },
+  {
+    "code": "53",
+    "label": "Differential geometry",
+    "description": "Differential geometry \\{For differential topology, see 57Rxx; for foundational questions of differentiable manifolds, see 58Axx\\}",
+    "child_file": "msc_53_level_2.json"
+  },
+  {
+    "code": "54",
+    "label": "General topology",
+    "description": "General topology \\{For the topology of manifolds of all dimensions, see 57Nxx\\}",
+    "child_file": "msc_54_level_2.json"
+  },
+  {
+    "code": "55",
+    "label": "Algebraic topology",
+    "description": "Algebraic topology",
+    "child_file": "msc_55_level_2.json"
+  },
+  {
+    "code": "57",
+    "label": "Manifolds and cell complexes",
+    "description": "Manifolds and cell complexes \\{For complex manifolds, see 32Qxx\\}",
+    "child_file": "msc_57_level_2.json"
+  },
+  {
+    "code": "58",
+    "label": "Global analysis, analysis on manifolds",
+    "description": "Global analysis, analysis on manifolds [See also 32Cxx, 32Fxx, 32Wxx, 46-XX, 53Cxx] \\{For nonlinear operators, see 47Hxx; for geometric integration theory, see 49Q15\\}",
+    "child_file": "msc_58_level_2.json"
+  },
+  {
+    "code": "60",
+    "label": "Probability theory and stochastic processes",
+    "description": "Probability theory and stochastic processes \\{For additional applications, see 05Cxx, 11Kxx, 34-XX, 35-XX, 62-XX, 76-XX, 81-XX, 82-XX, 90-XX, 91-XX, 92-XX, 93-XX, 94-XX\\}",
+    "child_file": "msc_60_level_2.json"
+  },
+  {
+    "code": "62",
+    "label": "Statistics",
+    "description": "Statistics",
+    "child_file": "msc_62_level_2.json"
+  },
+  {
+    "code": "65",
+    "label": "Numerical analysis",
+    "description": "Numerical analysis",
+    "child_file": "msc_65_level_2.json"
+  },
+  {
+    "code": "68",
+    "label": "Computer science",
+    "description": "Computer science \\{For papers containing software, source code, etc. in a specific mathematical area, see the classification number --04 in that area\\}",
+    "child_file": "msc_68_level_2.json"
+  },
+  {
+    "code": "70",
+    "label": "Mechanics of particles and systems",
+    "description": "Mechanics of particles and systems \\{For relativistic mechanics, see 83A05, 83C10; for statistical mechanics, see 82-XX\\}",
+    "child_file": "msc_70_level_2.json"
+  },
+  {
+    "code": "74",
+    "label": "Mechanics of deformable solids",
+    "description": "Mechanics of deformable solids",
+    "child_file": "msc_74_level_2.json"
+  },
+  {
+    "code": "76",
+    "label": "Fluid mechanics",
+    "description": "Fluid mechanics \\{For general continuum mechanics, see 74Axx, or other parts of 74-XX\\}",
+    "child_file": "msc_76_level_2.json"
+  },
+  {
+    "code": "78",
+    "label": "Optics, electromagnetic theory",
+    "description": "Optics, electromagnetic theory \\{For quantum optics, see 81V80\\}",
+    "child_file": "msc_78_level_2.json"
+  },
+  {
+    "code": "80",
+    "label": "Classical thermodynamics, heat transfer",
+    "description": "Classical thermodynamics, heat transfer \\{For thermodynamics of solids, see 74A15\\}",
+    "child_file": "msc_80_level_2.json"
+  },
+  {
+    "code": "81",
+    "label": "Quantum theory",
+    "description": "Quantum theory",
+    "child_file": "msc_81_level_2.json"
+  },
+  {
+    "code": "82",
+    "label": "Statistical mechanics, structure of matter",
+    "description": "Statistical mechanics, structure of matter",
+    "child_file": "msc_82_level_2.json"
+  },
+  {
+    "code": "83",
+    "label": "Relativity and gravitational theory",
+    "description": "Relativity and gravitational theory",
+    "child_file": "msc_83_level_2.json"
+  },
+  {
+    "code": "85",
+    "label": "Astronomy and astrophysics",
+    "description": "Astronomy and astrophysics \\{For celestial mechanics, see 70F15\\}",
+    "child_file": "msc_85_level_2.json"
+  },
+  {
+    "code": "86",
+    "label": "Geophysics",
+    "description": "Geophysics [See also 76U05, 76V05]",
+    "child_file": "msc_86_level_2.json"
+  },
+  {
+    "code": "90",
+    "label": "Operations research, mathematical programming",
+    "description": "Operations research, mathematical programming",
+    "child_file": "msc_90_level_2.json"
+  },
+  {
+    "code": "91",
+    "label": "Game theory, economics, finance, and other social and behavioral sciences",
+    "description": "Game theory, economics, finance, and other social and behavioral sciences",
+    "child_file": "msc_91_level_2.json"
+  },
+  {
+    "code": "92",
+    "label": "Biology and other natural sciences",
+    "description": "Biology and other natural sciences",
+    "child_file": "msc_92_level_2.json"
+  },
+  {
+    "code": "93",
+    "label": "Systems theory; control",
+    "description": "Systems theory; control \\{For optimal control, see 49-XX\\}",
+    "child_file": "msc_93_level_2.json"
+  },
+  {
+    "code": "94",
+    "label": "Information and communication theory, circuits",
+    "description": "Information and communication theory, circuits",
+    "child_file": "msc_94_level_2.json"
+  },
+  {
+    "code": "97",
+    "label": "Mathematics education",
+    "description": "Mathematics education",
+    "child_file": "msc_97_level_2.json"
+  }
+]
