@@ -112,7 +112,7 @@ async def classify_module(
             debug_mode=debug_mode
         )
 
-    return final_classification
+    return final_classification, concept_summary, selected_entries
 
 def main():
     """CLI entry point for classification."""

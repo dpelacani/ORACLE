@@ -24,6 +24,7 @@ def main():
     numerical modelling, physical and surface processes, tectonics of the ocean and many more...
     """
 
+
     # Load settings
     config = Settings()
     setup_logging(level="INFO")
@@ -51,9 +52,18 @@ def main():
             use_async=not args.no_async,
             langsmith_mode=False,
             debug_mode=True,
-            starting_depth=1,
-            depth_limit=5,
+            starting_depth=2,
+            depth_limit=2,
         ))
+        result, concept_summary, selected_entries = result
+
+        print("Concept Summary:")
+        print("-" * 40)
+        print(concept_summary)
+
+        print("Selected Entries:")
+        print("-" * 40)
+        print(selected_entries)
         
         print("\n" + "="*50)
         print("FINAL CLASSIFICATION RESULT")

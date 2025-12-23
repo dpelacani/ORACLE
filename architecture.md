@@ -2,6 +2,8 @@
 
 ORACLE (**O**ntology-based **R**ecursive **A**I-driven **C**lassification & **L**earning **E**ngine) is a modular framework designed to classify Higher Education module descriptions into complex, hierarchical ontologies (like MSC2020) using LLMs.
 
+<!-- ![ORACLE System Architecture](/Users/dp4018/.gemini/antigravity/brain/a72db1d5-6800-4825-8658-43ee705657d0/oracle_scientific_architecture_diagram_1766497466415.png) -->
+
 This document provides a technical overview for developers entering the codebase.
 
 ---
