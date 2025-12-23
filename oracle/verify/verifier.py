@@ -40,25 +40,38 @@ class Verifier:
 
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm
-        self.parser = JsonOutputParser(pydantic_object=FinalClassification)
+        # Use with_structured_output for robust JSON generation
+        self.structured_llm = self.llm.with_structured_output(FinalClassification)
 
-    def make_chain(self, ontology_name: str) -> RunnableSequence:
-        def _prepare_inputs(inputs: Dict[str, Any]) -> Dict[str, Any]:
-            concept_summary: ConceptSummary = inputs["concept_summary"]
-            selected_entries: List[LevelSelectionEntry] = inputs["selected_entries"]
-            selected_entries_json = json.dumps(
-                [e.model_dump() for e in selected_entries], ensure_ascii=False
-            )
-            return {
-                "ontology_name": ontology_name,
-                "concept_summary_json": concept_summary.model_dump_json(),
-                "selected_entries_json": selected_entries_json,
-            }
-
-        return RunnableSequence(
-            _prepare_inputs,
-            VERIFICATION_PROMPT | self.llm | self.parser,
+    def _prepare_final_inputs(self, concept_summary: ConceptSummary, selected_entries: List[LevelSelectionEntry], ontology_name: str) -> Dict[str, Any]:
+        selected_entries_json = json.dumps(
+            [e.model_dump() for e in selected_entries], ensure_ascii=False
         )
+        return {
+            "ontology_name": ontology_name,
+            "concept_summary_json": concept_summary.model_dump_json(),
+            "selected_entries_json": selected_entries_json,
+        }
+
+    async def averify_selection(
+        self, 
+        concept_summary: ConceptSummary, 
+        selected_entries: List[LevelSelectionEntry], 
+        ontology_name: str,
+        langsmith_mode: bool = False,
+        debug_mode: bool = False,
+    ) -> FinalClassification:
+        """
+        Check if the selected nodes are consistent and valid (async).
+        """
+        inputs = self._prepare_final_inputs(concept_summary, selected_entries, ontology_name)
+        config = self._prepare_config(selected_entries, ontology_name, langsmith_mode)
+        
+        logger.info(f"Invoking VERIFICATION_PROMPT (async)")
+        # Chain verification prompt with structured output
+        prompt_with_inputs = await VERIFICATION_PROMPT.ainvoke(inputs)
+        result = await self.structured_llm.ainvoke(prompt_with_inputs, config=config)
+        return result
 
     def verify_selection(
         self, 
@@ -69,20 +82,17 @@ class Verifier:
         debug_mode: bool = False,
     ) -> FinalClassification:
         """
-        Check if the selected nodes are consistent and valid.
-        
-        Args:
-            concept_summary: Extracted concept summary
-            selected_entries: List of selected entries from traversal
-            ontology_name: Name of the ontology being used
-            langsmith_mode: If True, add LangSmith metadata for tracing
+        Check if the selected nodes are consistent and valid (sync).
         """
-        chain = self.make_chain(ontology_name)
+        inputs = self._prepare_final_inputs(concept_summary, selected_entries, ontology_name)
+        config = self._prepare_config(selected_entries, ontology_name, langsmith_mode)
         
-        logger.info(f"Verifying {len(selected_entries)} selected entries")
-        logger.info(f"\tInput: {len(selected_entries)} entries to verify")
-        logger.info(f"\tOntology: {ontology_name}")
-        
+        logger.info(f"Invoking VERIFICATION_PROMPT (sync)")
+        prompt_with_inputs = VERIFICATION_PROMPT.invoke(inputs)
+        result = self.structured_llm.invoke(prompt_with_inputs, config=config)
+        return result
+
+    def _prepare_config(self, selected_entries, ontology_name, langsmith_mode):
         config = {}
         if langsmith_mode:
             config = {
@@ -93,38 +103,6 @@ class Verifier:
                     "ontology_name": ontology_name,
                     "num_selected_entries": len(selected_entries),
                     "selected_codes": [e.code for e in selected_entries],
-                    "depths": list(set(e.depth for e in selected_entries)),
-                    "concept_summary_preview": {
-                        "core_topics_count": len(concept_summary.core_topics),
-                        "methods_count": len(concept_summary.methods),
-                        "applications_count": len(concept_summary.applications),
-                    }
                 }
             }
-            logger.info(f"Verifying {len(selected_entries)} selected entries with LangSmith metadata")
-        
-        
-        logger.info(f"Invoking VERIFICATION_PROMPT")
-        result = chain.invoke(
-            {
-                "concept_summary": concept_summary,
-                "selected_entries": selected_entries
-            },
-            config=config
-        )
-
-        logger.info(f"{result}")
-        final_classification = FinalClassification(**result)
-        
-        logger.info(f"Verification complete: {len(final_classification.selected_codes)} final codes, "
-                    f"{len(final_classification.unmatched_topics)} unmatched topics")
-        logger.info(f"Dropped codes:{set(e.code for e in selected_entries) - set(c.code for c in final_classification.selected_codes)}")
-        logger.info(f"Verification Results:")
-        logger.info(f"\tFinal codes selected: {len(final_classification.selected_codes)}")
-        if final_classification.selected_codes:
-            logger.info(f"\tCodes: {[c.code for c in final_classification.selected_codes]}")
-        logger.info(f"\tUnmatched topics: {len(final_classification.unmatched_topics)}")
-        if final_classification.unmatched_topics:
-            logger.info(f"\tUnmatched: {[t.topic for t in final_classification.unmatched_topics[:5]]}...")
-
-        return final_classification
+        return config

@@ -12,6 +12,7 @@ class OntologyNode(BaseModel):
     label: str
     description: str
     has_children: bool = False
+    synonyms: List[str] = []
 
 class BaseOntology(ABC):
     """Abstract base class for all ontologies used by ORACLE."""

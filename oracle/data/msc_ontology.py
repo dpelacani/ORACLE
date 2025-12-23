@@ -6,7 +6,7 @@ import csv
 import re
 import logging
 from pathlib import Path
-from typing import List, Dict, Optional, Set
+from typing import List, Dict, Optional, Set, Any
 from .base import BaseOntology, OntologyNode
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,9 @@ class MSCOntology(BaseOntology):
     - Level 3: XXANN (e.g., 62A01)
     """
 
-    def __init__(self, csv_path: str):
+    def __init__(self, csv_path: str, synonym_generator: Optional[Any] = None):
         self.csv_path = Path(csv_path)
+        self.synonym_generator = synonym_generator
         self.nodes: Dict[str, OntologyNode] = {}
         self.hierarchy: Dict[str, List[str]] = {} # parent_code -> [child_codes]
         self.roots: List[str] = []

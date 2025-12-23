@@ -2,54 +2,73 @@
 Script to run classification on an example file.
 """
 
-import sys
-import os
+import asyncio
+import traceback
 from pathlib import Path
-from oracle.data.msc_ontology import MSCOntology
-
-# Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+from oracle.config import Settings
 from oracle.cli.classify import classify_module
+from oracle.data.msc_ontology import MSCOntology
+from oracle.utils.logging import setup_logging
 
-if __name__ == "__main__":
-    example_title = "Numerical Optimisation and Machine Learning"
-    example_description = """
-    This module introduces numerical optimisation and basic machine learning.
-    Topics include gradient descent, stochastic gradient methods, linear regression,
-    logistic regression, and simple neural networks. Students will learn to implement
-    algorithms in Python and to evaluate models on real-world datasets.
+def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--no-async", action="store_true", help="Disable async execution")
+    args = parser.parse_args()
+
+    # Setup test data
+    title = "Mathematics for Earth Sciences"
+    description = """
+    Teaches a variety of important and fundamental university-level mathematical tools to tackle mathematical problems 
+    that commonly arise in Earth Sciences such as in planetary sciences, geodynamics, seismic techniques, 
+    numerical modelling, physical and surface processes, tectonics of the ocean and many more...
     """
-    
-    # Create a temporary file for the example
-    example_file = "examples/sample.md"
-    os.makedirs("examples", exist_ok=True)
-    with open(example_file, "w") as f:
-        f.write(example_description)
 
-    print("Running example classification...")
-    
-    # Debug config loading
-    from oracle.config import Settings
+    # Load settings
     config = Settings()
+    setup_logging(level="INFO")
+
+    # Print debug config
     print("\n[DEBUG] Configuration Loaded:")
     for k, v in config.debug_dump().items():
         print(f"  {k}: {v}")
     print("-" * 40 + "\n")
 
-    try:
-        # Instantiate ontology early
-        csv_path = Path("ontology/msc") / "MSC_2020.csv"
-        ontology = MSCOntology(csv_path)
+    # Instantiate ontology
+    csv_path = Path("ontology/msc/MSC_2020.csv")
+    if not csv_path.exists():
+        # Fallback if running from scripts dir
+        csv_path = Path("../ontology/msc/MSC_2020.csv")
+    ontology = MSCOntology(csv_path)
 
-        result = classify_module(
-            module_description=example_description,
-            module_title=example_title,
+    try:
+        # Run classification
+        result = asyncio.run(classify_module(
+            title=title,
+            description=description,
             ontology=ontology,
-            debug_log_dir="debug_logs",
-            starting_depth=2,
-            max_depth=2,
-        )
-        print(result.model_dump_json(indent=2))
+            config=config,
+            use_async=not args.no_async,
+            langsmith_mode=False,
+            debug_mode=True
+        ))
+        
+        print("\n" + "="*50)
+        print("FINAL CLASSIFICATION RESULT")
+        print("="*50)
+        print(f"Title: {title}")
+        print(f"Codes: {[c.code for c in result.selected_codes]}")
+        for code in result.selected_codes:
+            print(f"  - {code.code}: {code.label}")
+        
+        if result.unmatched_topics:
+            print(f"\nUnmatched Topics: {len(result.unmatched_topics)}")
+            for t in result.unmatched_topics:
+                print(f"  - {t.topic}")
+
     except Exception as e:
-        print(f"Error running example: {e}")
+        print(f"\nError running example: {e}")
+        traceback.print_exc()
+
+if __name__ == "__main__":
+    main()

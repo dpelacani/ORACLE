@@ -25,7 +25,7 @@ class LevelSelectionEntry(BaseModel):
     should_descend: bool
 
 class LevelSelection(BaseModel):
-    selected_entries: List[LevelSelectionEntry]
+    selected_codes: List[LevelSelectionEntry]
 
 class LevelSelector:
     """Selects relevant ontology nodes at a specific level."""
@@ -40,18 +40,21 @@ class LevelSelector:
         def _prepare_inputs(inputs: Dict[str, Any]) -> Dict[str, Any]:
             concept_summary: ConceptSummary = inputs["concept_summary"]
             entries: List[OntologyNode] = inputs["entries"]
+            path_so_far: List[str] = inputs.get("path_so_far", [])
 
             entries_json = [
                 {
                     "code": e.code,
                     "label": e.label,
                     "description": e.description,
+                    "synonyms": e.synonyms,
                 }
                 for e in entries
             ]
 
             return {
                 "depth": depth,
+                "path_so_far": " -> ".join(path_so_far),
                 "concept_summary_json": concept_summary.model_dump_json(),
                 "ontology_entries_json": json.dumps(
                     entries_json, ensure_ascii=False
@@ -60,30 +63,66 @@ class LevelSelector:
 
         return RunnableSequence(
             _prepare_inputs,
-            LEVEL_SELECTION_PROMPT | self.llm | self.parser,
+            LEVEL_SELECTION_PROMPT | self.llm.with_retry() | self.parser,
         )
+
+    async def aselect_nodes(
+        self, 
+        concept_summary: ConceptSummary, 
+        entries: List[OntologyNode], 
+        depth: int,
+        path_so_far: List[str] = [],
+        langsmith_mode: bool = False,
+        debug_mode: bool = False,
+        file_name: str = None
+    ) -> LevelSelection:
+        """
+        Select the most relevant candidate nodes for the given concepts (async).
+        """
+        chain = self.make_chain(depth)
+        config = self._prepare_config(depth, entries, concept_summary, langsmith_mode, file_name)
+        
+        logging.info(f"Invoking LEVEL_SELECTION_PROMPT (async)")
+        result = await chain.ainvoke(
+            {
+                "concept_summary": concept_summary,
+                "entries": entries,
+                "path_so_far": path_so_far
+            },
+            config=config
+        )
+        
+        return LevelSelection(**result)
 
     def select_nodes(
         self, 
         concept_summary: ConceptSummary, 
         entries: List[OntologyNode], 
         depth: int,
+        path_so_far: List[str] = [],
         langsmith_mode: bool = False,
         debug_mode: bool = False,
         file_name: str = None
     ) -> LevelSelection:
         """
-        Select the most relevant candidate nodes for the given concepts.
-        
-        Args:
-            concept_summary: Extracted concept summary
-            entries: List of ontology entries at this level
-            depth: Current depth in the ontology hierarchy
-            langsmith_mode: If True, add LangSmith metadata for tracing
-            file_name: Optional ontology file name for debugging context
+        Select the most relevant candidate nodes for the given concepts (sync).
         """
         chain = self.make_chain(depth)
+        config = self._prepare_config(depth, entries, concept_summary, langsmith_mode, file_name)
         
+        logging.info(f"Invoking LEVEL_SELECTION_PROMPT (sync)")
+        result = chain.invoke(
+            {
+                "concept_summary": concept_summary,
+                "entries": entries,
+                "path_so_far": path_so_far
+            },
+            config=config
+        )
+        
+        return LevelSelection(**result)
+
+    def _prepare_config(self, depth, entries, concept_summary, langsmith_mode, file_name):
         config = {}
         if langsmith_mode:
             config = {
@@ -94,7 +133,7 @@ class LevelSelector:
                     "depth": depth,
                     "num_entries": len(entries),
                     "file_name": file_name or "unknown",
-                    "entry_codes": [e.code for e in entries[:10]],  # First 10 codes
+                    "entry_codes": [e.code for e in entries[:10]],
                     "concept_summary_preview": {
                         "core_topics_count": len(concept_summary.core_topics),
                         "methods_count": len(concept_summary.methods),
@@ -102,16 +141,4 @@ class LevelSelector:
                     }
                 }
             }
-            logger.debug(f"Selecting nodes at depth {depth} with LangSmith metadata")
-
-
-        logging.info(f"Invoking LEVEL_SELECTION_PROMPT")
-        result = chain.invoke(
-            {
-                "concept_summary": concept_summary,
-                "entries": entries
-            },
-            config=config
-        )
-        
-        return LevelSelection(**result)
+        return config

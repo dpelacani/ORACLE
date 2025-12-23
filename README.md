@@ -4,6 +4,8 @@
 
 ORACLE is an intelligent system designed to classify educational content (such as university module descriptions) against complex hierarchical ontologies (like the Mathematics Subject Classification - MSC 2020). It leverages Large Language Models (LLMs) to extract concepts, traverse ontology trees, and verify classifications with high precision.
 
+For a detailed deep-dive into the technical design, see **[architecture.md](architecture.md)**.
+
 ## 🚀 Features
 
 - **Concept Extraction**: Automatically extracts core topics, methods, applications, and skills from unstructured text.

@@ -32,48 +32,51 @@ Module description:
 
 LEVEL_SELECTION_PROMPT = ChatPromptTemplate.from_template(
     """
-You are performing ontology-based classification of a Higher Education module.
+    You are performing ontology-based classification of a Higher Education module.
 
-Inputs:
-1) A structured concept summary of the module.
-2) A list of ontology entries at the CURRENT LEVEL only, each with:
-   - code
-   - label
-   - description
+    Current classification path (context):
+    {path_so_far}
 
-Your tasks at THIS LEVEL are:
-- From the provided entries, select all codes that plausibly match the module content.
-- For each selected entry, indicate:
-  - which concepts (from core_topics, methods, applications, skills) it matches;
-  - a short justification;
-  - whether you recommend descending into its children (should_descend = true/false).
-    *Set should_descend = true if more specific subclasses are likely to be relevant, 
-    and the module content seems rich enough to justify finer distinctions.*
+    Inputs:
+    1) A structured concept summary of the module.
+    2) A list of ontology entries at the CURRENT LEVEL only (children of the last node in the path), each with:
+       - code
+       - label
+       - description
 
-Do NOT invent codes or labels. Only choose among the entries given at this level.
+    Your tasks at THIS LEVEL are:
+    - From the provided entries, select all codes that plausibly match the module content.
+    - For each selected entry, indicate:
+      - which concepts (from core_topics, methods, applications, skills) it matches;
+      - a short justification;
+      - whether you recommend descending into its children (should_descend = true/false).
+        *Set should_descend = true if more specific subclasses are likely to be relevant, 
+        and the module content seems rich enough to justify finer distinctions.*
 
-Return a JSON object:
+    Do NOT invent codes or labels. Only choose among the entries given at this level.
 
-{{
-  "selected_entries": [
+    Return a JSON object:
+
     {{
-      "code": "<string>",
-      "label": "<string>",
-      "depth": {depth},
-      "matched_concepts": ["<core_concept_1>", "<core_concept_2>", "<skill_3>" "..."],
-      "justification": "<2–4 sentence explanation>",
-      "should_descend": true or false
-    }},
-    ...
-  ]
-}}
+      "selected_codes": [
+        {{
+          "code": "<string>",
+          "label": "<string>",
+          "depth": {depth},
+          "matched_concepts": ["<core_concept_1>", "<core_concept_2>", "<skill_3>" "..."],
+          "justification": "<2–4 sentence explanation>",
+          "should_descend": true or false
+        }},
+        ...
+      ]
+    }}
 
-Module concept summary:
-{concept_summary_json}
+    Module concept summary:
+    {concept_summary_json}
 
-Ontology entries at this level:
-{ontology_entries_json}
-"""
+    Ontology entries at this level:
+    {ontology_entries_json}
+    """
 )
 
 VERIFICATION_PROMPT = ChatPromptTemplate.from_template(

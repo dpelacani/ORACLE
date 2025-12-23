@@ -49,6 +49,14 @@ class Settings(BaseSettings):
         default=0.0,
         validation_alias=AliasChoices("ORACLE_LLM_TEMPERATURE", "LLM_TEMPERATURE")
     )
+    request_timeout: int = Field(
+        default=60,
+        validation_alias=AliasChoices("ORACLE_REQUEST_TIMEOUT", "REQUEST_TIMEOUT")
+    )
+    max_retries: int = Field(
+        default=3,
+        validation_alias=AliasChoices("ORACLE_MAX_RETRIES", "MAX_RETRIES")
+    )
 
     # Package Configuration
     ontology_path: str = Field(
@@ -81,7 +89,6 @@ class Settings(BaseSettings):
     @classmethod
     def settings_customise_sources(
         cls,
-        settings_cls: type[BaseSettings],
         init_settings: PydanticBaseSettingsSource,
         env_settings: PydanticBaseSettingsSource,
         dotenv_settings: PydanticBaseSettingsSource,
@@ -98,6 +105,7 @@ class Settings(BaseSettings):
             temperature=self.llm_temperature,
             api_key=self.api_key,
             base_url=self.base_url,
+            request_timeout=self.request_timeout,
         )
 
     def debug_dump(self) -> dict:
@@ -112,5 +120,3 @@ class Settings(BaseSettings):
             dump[field_name] = val
         return dump
 
-# Backward compatibility / Helper methods - REMOVED for cleanup.
-# Use Settings() directly.

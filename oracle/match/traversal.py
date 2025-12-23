@@ -1,7 +1,4 @@
-"""
-Hierarchical selective traversal controller.
-"""
-
+import asyncio
 import logging
 from typing import List, Dict, Optional
 from oracle.match.level_selector import LevelSelector, LevelSelectionEntry, LevelSelection
@@ -13,9 +10,109 @@ logger = logging.getLogger(__name__)
 class TraversalController:
     """Controls the traversal through the ontology hierarchy using BaseOntology."""
 
-    def __init__(self, selector: LevelSelector, ontology: BaseOntology):
+    def __init__(self, selector: LevelSelector, ontology: BaseOntology, max_concurrency: int = 5):
         self.selector = selector
         self.ontology = ontology
+        self.semaphore = asyncio.Semaphore(max_concurrency)
+
+    async def _aenrich_entries(self, entries: List[OntologyNode], path_so_far: List[str]):
+        """Enrich a list of nodes with synonyms if a generator is available (async)."""
+        if not hasattr(self.ontology, 'synonym_generator') or not self.ontology.synonym_generator:
+            return
+
+        path_str = " -> ".join(path_so_far)
+        tasks = []
+        
+        async def _enriched_aget_synonyms(node):
+            async with self.semaphore:
+                return await self.ontology.synonym_generator.aget_synonyms(
+                    code=node.code,
+                    label=node.label,
+                    description=node.description,
+                    path=path_str
+                )
+
+        for node in entries:
+            if not node.synonyms:
+                tasks.append(_enriched_aget_synonyms(node))
+            else:
+                tasks.append(asyncio.sleep(0)) 
+
+        results = await asyncio.gather(*tasks)
+        for i, node in enumerate(entries):
+            if not node.synonyms and results[i] is not None:
+                node.synonyms = results[i]
+
+    def _enrich_entries(self, entries: List[OntologyNode], path_so_far: List[str]):
+        """Enrich a list of nodes with synonyms if a generator is available (sync)."""
+        if not hasattr(self.ontology, 'synonym_generator') or not self.ontology.synonym_generator:
+            return
+
+        path_str = " -> ".join(path_so_far)
+        for node in entries:
+            if not node.synonyms:
+                node.synonyms = self.ontology.synonym_generator.get_synonyms(
+                    code=node.code,
+                    label=node.label,
+                    description=node.description,
+                    path=path_str
+                )
+
+    async def atraverse(
+        self, 
+        concept_summary: ConceptSummary, 
+        starting_depth: int = 1,
+        langsmith_mode: bool = False,
+        debug_mode: bool = False,
+        depth_limit: int = 10,
+    ) -> List[LevelSelectionEntry]:
+        """Hierarchical traversal (async parallel)."""
+        accumulated: List[LevelSelectionEntry] = []
+        lock = asyncio.Lock()
+
+        async def _atraverse(node_code: Optional[str], depth: int, path_so_far: List[str]):
+            if depth > depth_limit:
+                return
+            
+            if node_code is None:
+                entries = self.ontology.get_roots()
+                current_label = "Root"
+            else:
+                entries = self.ontology.get_children(node_code)
+                node = self.ontology.get_node(node_code)
+                current_label = node.label if node else node_code
+
+            if not entries: return
+            current_path = path_so_far + [current_label]
+            await self._aenrich_entries(entries, current_path)
+
+            level_selection: LevelSelection
+            async with self.semaphore:
+                level_selection = await self.selector.aselect_nodes(
+                    concept_summary=concept_summary,
+                    entries=entries,
+                    depth=depth,
+                    path_so_far=current_path,
+                    langsmith_mode=langsmith_mode,
+                    debug_mode=debug_mode,
+                    file_name=node_code or "root"
+                )
+
+            if not level_selection.selected_codes: return
+            async with lock: accumulated.extend(level_selection.selected_codes)
+
+            node_map = {n.code: n for n in entries}
+            descend_tasks = []
+            for sel in level_selection.selected_codes:
+                if sel.should_descend:
+                    n = node_map.get(sel.code)
+                    if n and n.has_children:
+                        descend_tasks.append(_atraverse(sel.code, depth + 1, current_path))
+            
+            if descend_tasks: await asyncio.gather(*descend_tasks)
+
+        await _atraverse(None, starting_depth, [])
+        return accumulated
 
     def traverse(
         self, 
@@ -25,79 +122,44 @@ class TraversalController:
         debug_mode: bool = False,
         depth_limit: int = 10,
     ) -> List[LevelSelectionEntry]:
-        """
-        Perform hierarchical traversal:
-        - start from ontology roots;
-        - at each level, the LLM selects relevant entries and says whether to descend;
-        - only branches with should_descend=True and has_children=True are explored.
-        Returns all selected entries across all levels.
-        """
+        """Hierarchical traversal (sync sequential)."""
         accumulated: List[LevelSelectionEntry] = []
-        traversal_path = []
 
-        logger.info(f"Starting traversal (depth {starting_depth})")
-
-        def _traverse(node_code: Optional[str], depth: int):
-            nonlocal accumulated, traversal_path
-
+        def _traverse(node_code: Optional[str], depth: int, path_so_far: List[str]):
             if depth > depth_limit:
-                logger.info(f"\t[Depth {depth}] Reached depth limit ({depth_limit}). Stopping traversal.")
                 return
-
-            # If node_code is None, we are at the root level
+            
             if node_code is None:
-                logger.info(f"\t[Depth {depth}] Loading roots")
                 entries = self.ontology.get_roots()
-                current_id = "root"
+                current_label = "Root"
             else:
-                logger.info(f"\t[Depth {depth}] Loading children for: {node_code}")
                 entries = self.ontology.get_children(node_code)
-                current_id = node_code
+                node = self.ontology.get_node(node_code)
+                current_label = node.label if node else node_code
 
-            if not entries:
-                logger.info(f"\t[Depth {depth}] No entries found for {current_id}. Exiting branch.")
-                return
+            if not entries: return
+            current_path = path_so_far + [current_label]
+            self._enrich_entries(entries, current_path)
 
-            traversal_path.append({"code": current_id, "depth": depth})
-            logger.info(f"\t[Depth {depth}] Loaded {len(entries)} entries")
-
-            # Map OntologyNode to a format level_selector understands if needed
-            # Currently LevelSelector uses the entries directly. 
-            # We ensure MSCOntology.get_children returns LevelSelector compatible objects.
             level_selection: LevelSelection = self.selector.select_nodes(
                 concept_summary=concept_summary,
                 entries=entries,
                 depth=depth,
+                path_so_far=current_path,
                 langsmith_mode=langsmith_mode,
                 debug_mode=debug_mode,
-                file_name=current_id # passing code as file_name for now
+                file_name=node_code or "root"
             )
 
-            if not level_selection.selected_entries:
-                logger.info(f"\t[Depth {depth}] No entries selected. Exiting branch {current_id}")
-                return
+            if not level_selection.selected_codes: return
+            accumulated.extend(level_selection.selected_codes)
 
-            selected_codes = [e.code for e in level_selection.selected_entries]
-            logger.info(f"\t[Depth {depth}] Selected {len(level_selection.selected_entries)} entries: {selected_codes}")
+            node_map = {n.code: n for n in entries}
+            for sel in level_selection.selected_codes:
+                if sel.should_descend:
+                    n = node_map.get(sel.code)
+                    if n and n.has_children:
+                        _traverse(sel.code, depth + 1, current_path)
 
-            accumulated.extend(level_selection.selected_entries)
-
-            # Map nodes for quick lookup
-            node_map: Dict[str, OntologyNode] = {n.code: n for n in entries}
-            
-            for sel in level_selection.selected_entries:
-                if not sel.should_descend:
-                    continue
-                
-                node = node_map.get(sel.code)
-                if node and node.has_children:
-                    logger.info(f"\t[Depth {depth}] Descending into {sel.code}")
-                    _traverse(node_code=sel.code, depth=depth + 1)
-                else:
-                    logger.info(f"\t[Depth {depth}] Entry {sel.code} has no children to descend into")
-
-        # Initial call with None to start from roots
-        _traverse(node_code=None, depth=starting_depth)
-        
-        logger.info(f"Traversal complete: {len(accumulated)} total entries selected")
+        _traverse(None, starting_depth, [])
         return accumulated
