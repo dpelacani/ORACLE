@@ -96,7 +96,7 @@ Tasks:
 1) Remove duplicates and obvious near-duplicates.
 2) Prefer more specific (higher depth) entries when they clearly apply, 
    but you may keep both specific and general codes where both are informative.
-3) Remove codes whose justification is weak or redundant relative to others in the same branch.
+3) Remove codes whose justification is weak
 4) Identify any core topic, method, or application that has no plausible selected code. 
    For such topics, you may suggest a nearest_code_candidate from the selected codes if appropriate, 
    otherwise leave it null.

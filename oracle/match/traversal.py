@@ -36,6 +36,7 @@ class TraversalController:
             if not node.synonyms:
                 tasks.append(_enriched_aget_synonyms(node))
             else:
+                # If synonyms are already available, just add a sleep task to keep the semaphore open
                 tasks.append(asyncio.sleep(0)) 
 
         results = await asyncio.gather(*tasks)
@@ -61,7 +62,6 @@ class TraversalController:
     async def atraverse(
         self, 
         concept_summary: ConceptSummary, 
-        starting_depth: int = 1,
         langsmith_mode: bool = False,
         debug_mode: bool = False,
         depth_limit: int = 10,
@@ -111,13 +111,12 @@ class TraversalController:
             
             if descend_tasks: await asyncio.gather(*descend_tasks)
 
-        await _atraverse(None, starting_depth, [])
+        await _atraverse(None, 1, [])
         return accumulated
 
     def traverse(
         self, 
         concept_summary: ConceptSummary, 
-        starting_depth: int = 1,
         langsmith_mode: bool = False,
         debug_mode: bool = False,
         depth_limit: int = 10,
@@ -161,5 +160,5 @@ class TraversalController:
                     if n and n.has_children:
                         _traverse(sel.code, depth + 1, current_path)
 
-        _traverse(None, starting_depth, [])
+        _traverse(None, 1, [])
         return accumulated

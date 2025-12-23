@@ -52,7 +52,6 @@ def main():
             use_async=not args.no_async,
             langsmith_mode=False,
             debug_mode=True,
-            starting_depth=2,
             depth_limit=2,
         ))
         result, concept_summary, selected_entries = result

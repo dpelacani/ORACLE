@@ -29,7 +29,6 @@ async def classify_module(
     use_async: bool = True,
     langsmith_mode: bool = False,
     debug_mode: bool = False,
-    starting_depth: int = 1,
     depth_limit: int = 10
 ) -> FinalClassification:
     """
@@ -66,7 +65,6 @@ async def classify_module(
             concept_summary=concept_summary,
             langsmith_mode=langsmith_mode,
             debug_mode=debug_mode,
-            starting_depth=starting_depth,
             depth_limit=depth_limit
         )
 
@@ -97,7 +95,6 @@ async def classify_module(
             concept_summary=concept_summary,
             langsmith_mode=langsmith_mode,
             debug_mode=debug_mode,
-            starting_depth=starting_depth,
             depth_limit=depth_limit
             
         )
@@ -124,7 +121,6 @@ def main():
     parser.add_argument("--langsmith", action="store_true", help="Enable LangSmith tracing")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
     parser.add_argument("--no-async", action="store_true", help="Disable asynchronous execution (for debugging)")
-    parser.add_argument("--starting-depth", type=int, default=1, help="Depth to start traversal at")
     parser.add_argument("--depth-limit", type=int, default=10, help="Maximum depth to traverse")
 
     args = parser.parse_args()
@@ -155,7 +151,6 @@ def main():
         use_async=not args.no_async,
         langsmith_mode=args.langsmith or config.langchain_tracing_v2,
         debug_mode=args.debug,
-        starting_depth=args.starting_depth,
         depth_limit=args.depth_limit
     ))
 
