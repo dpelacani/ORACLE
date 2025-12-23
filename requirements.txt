@@ -1,0 +1,8 @@
+langchain
+langchain-openai
+langchain-core
+langsmith
+pydantic
+pydantic-settings
+openai
+python-dotenv

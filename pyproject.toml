@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oracle"
+version = "0.1.0"
+description = "Ontology-based Reasoning Agents for Curriculum Labelling and Exploration"
+authors = [
+    {name = "Deborah Pelacani Cruz", email = "dp4018@ic.ac.uk"},
+]
+dependencies = [
+    "langchain",
+    "pydantic",
+    "pydantic-settings",
+    "openai",
+    "python-dotenv",
+    "pytest",
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+oracle-classify = "oracle.cli.classify:main"
+
+[tool.setuptools]
+packages = ["oracle"]
