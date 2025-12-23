@@ -32,39 +32,28 @@ class LevelSelector:
 
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm
-        self.parser = JsonOutputParser(pydantic_object=LevelSelection)
+        # Use with_structured_output for robust JSON generation
+        self.structured_llm = self.llm.with_structured_output(LevelSelection)
 
-    def make_chain(self, depth: int) -> RunnableSequence:
-        """Build a Runnable that selects entries at a given depth."""
-        
-        def _prepare_inputs(inputs: Dict[str, Any]) -> Dict[str, Any]:
-            concept_summary: ConceptSummary = inputs["concept_summary"]
-            entries: List[OntologyNode] = inputs["entries"]
-            path_so_far: List[str] = inputs.get("path_so_far", [])
-
-            entries_json = [
-                {
-                    "code": e.code,
-                    "label": e.label,
-                    "description": e.description,
-                    "synonyms": e.synonyms,
-                }
-                for e in entries
-            ]
-
-            return {
-                "depth": depth,
-                "path_so_far": " -> ".join(path_so_far),
-                "concept_summary_json": concept_summary.model_dump_json(),
-                "ontology_entries_json": json.dumps(
-                    entries_json, ensure_ascii=False
-                ),
+    def _prepare_level_inputs(self, concept_summary: ConceptSummary, entries: List[OntologyNode], depth: int, path_so_far: List[str]) -> Dict[str, Any]:
+        entries_json = [
+            {
+                "code": e.code,
+                "label": e.label,
+                "description": e.description,
+                "synonyms": e.synonyms,
             }
+            for e in entries
+        ]
 
-        return RunnableSequence(
-            _prepare_inputs,
-            LEVEL_SELECTION_PROMPT | self.llm.with_retry() | self.parser,
-        )
+        return {
+            "depth": depth,
+            "path_so_far": " -> ".join(path_so_far),
+            "concept_summary_json": concept_summary.model_dump_json(),
+            "ontology_entries_json": json.dumps(
+                entries_json, ensure_ascii=False
+            ),
+        }
 
     async def aselect_nodes(
         self, 
@@ -77,22 +66,16 @@ class LevelSelector:
         file_name: str = None
     ) -> LevelSelection:
         """
-        Select the most relevant candidate nodes for the given concepts (async).
+        Select the most relevant candidate nodes (async).
         """
-        chain = self.make_chain(depth)
+        inputs = self._prepare_level_inputs(concept_summary, entries, depth, path_so_far)
         config = self._prepare_config(depth, entries, concept_summary, langsmith_mode, file_name)
         
-        logging.info(f"Invoking LEVEL_SELECTION_PROMPT (async)")
-        result = await chain.ainvoke(
-            {
-                "concept_summary": concept_summary,
-                "entries": entries,
-                "path_so_far": path_so_far
-            },
-            config=config
-        )
-        
-        return LevelSelection(**result)
+        logger.info(f"Invoking LEVEL_SELECTION_PROMPT (async)")
+        # Chain via prompt invocation then structured output
+        prompt_with_inputs = await LEVEL_SELECTION_PROMPT.ainvoke(inputs)
+        result = await self.structured_llm.ainvoke(prompt_with_inputs, config=config)
+        return result
 
     def select_nodes(
         self, 
@@ -105,22 +88,15 @@ class LevelSelector:
         file_name: str = None
     ) -> LevelSelection:
         """
-        Select the most relevant candidate nodes for the given concepts (sync).
+        Select the most relevant candidate nodes (sync).
         """
-        chain = self.make_chain(depth)
+        inputs = self._prepare_level_inputs(concept_summary, entries, depth, path_so_far)
         config = self._prepare_config(depth, entries, concept_summary, langsmith_mode, file_name)
         
-        logging.info(f"Invoking LEVEL_SELECTION_PROMPT (sync)")
-        result = chain.invoke(
-            {
-                "concept_summary": concept_summary,
-                "entries": entries,
-                "path_so_far": path_so_far
-            },
-            config=config
-        )
-        
-        return LevelSelection(**result)
+        logger.info(f"Invoking LEVEL_SELECTION_PROMPT (sync)")
+        prompt_with_inputs = LEVEL_SELECTION_PROMPT.invoke(inputs)
+        result = self.structured_llm.invoke(prompt_with_inputs, config=config)
+        return result
 
     def _prepare_config(self, depth, entries, concept_summary, langsmith_mode, file_name):
         config = {}

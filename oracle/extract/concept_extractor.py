@@ -24,8 +24,8 @@ class ConceptExtractor:
 
     def __init__(self, llm: ChatOpenAI):
         self.llm = llm
-        self.parser = JsonOutputParser(pydantic_object=ConceptSummary)
-        self.chain = CONCEPT_EXTRACTION_PROMPT | self.llm.with_retry() | self.parser
+        # Use with_structured_output for consistency and robustness
+        self.structured_llm = self.llm.with_structured_output(ConceptSummary)
 
     async def aextract_concepts(
         self, 
@@ -42,14 +42,15 @@ class ConceptExtractor:
         full_text = f"Module Title: {title}\n\nModule Description:\n{text}"
 
         logger.info(f"Invoking CONCEPT_EXTRACTION_PROMPT (async)")
-        result = await self.chain.ainvoke(
+        prompt_with_inputs = await CONCEPT_EXTRACTION_PROMPT.ainvoke(
             {
                 "module_title": title,
                 "module_description": full_text
-            },
-            config=config
+            }
         )
-        return ConceptSummary(**result)
+        # Directly get the result model from structured output
+        result = await self.structured_llm.ainvoke(prompt_with_inputs, config=config)
+        return result
 
     def extract_concepts(
         self, 
@@ -66,14 +67,14 @@ class ConceptExtractor:
         full_text = f"Module Title: {title}\n\nModule Description:\n{text}"
 
         logger.info(f"Invoking CONCEPT_EXTRACTION_PROMPT (sync)")
-        result = self.chain.invoke(
+        prompt_with_inputs = CONCEPT_EXTRACTION_PROMPT.invoke(
             {
                 "module_title": title,
                 "module_description": full_text
-            },
-            config=config
+            }
         )
-        return ConceptSummary(**result)
+        result = self.structured_llm.invoke(prompt_with_inputs, config=config)
+        return result
 
     def _prepare_config(self, text, langsmith_mode):
         config = {}

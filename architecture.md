@@ -79,7 +79,7 @@ ORACLE supports a `use_async` flag.
 - **Sync**: Best for debugging; logs appear in a clear, sequential order capturing the precise reasoning path.
 
 ### 🔹 Concurrency Control
-To prevent overwhelming API endpoints or credit limits, the `TraversalController` uses an **`asyncio.Semaphore`** (default limit: 10). This ensures that even in deep, wide ontologies, no more than 10 LLM requests are active at once.
+To prevent overwhelming API endpoints or credit limits, the `TraversalController` uses an **`asyncio.Semaphore`** (default limit: 5). This ensures that even in deep, wide ontologies, no more than 5 LLM requests are active at once.
 
 ### 🔹 Resilience & Self-Healing
 LLM calls are wrapped in `tenacity` retries via LangChain's `.with_retry()`. The system is designed to automatically recover from common network errors like `502 Bad Gateway` or `504 Gateway Timeout`.

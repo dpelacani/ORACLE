@@ -29,7 +29,7 @@ def main():
     setup_logging(level="INFO")
 
     # Print debug config
-    print("\n[DEBUG] Configuration Loaded:")
+    print("\nConfiguration Loaded:")
     for k, v in config.debug_dump().items():
         print(f"  {k}: {v}")
     print("-" * 40 + "\n")
@@ -50,7 +50,9 @@ def main():
             config=config,
             use_async=not args.no_async,
             langsmith_mode=False,
-            debug_mode=True
+            debug_mode=True,
+            starting_depth=1,
+            depth_limit=5,
         ))
         
         print("\n" + "="*50)

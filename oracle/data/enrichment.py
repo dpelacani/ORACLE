@@ -47,8 +47,8 @@ class SynonymGenerator:
     def __init__(self, llm: ChatOpenAI, cache_path: str):
         self.llm = llm
         self.cache_path = Path(cache_path)
-        self.parser = JsonOutputParser(pydantic_object=SynonymResponse)
-        self.chain = SYNONYM_PROMPT | self.llm.with_retry() | self.parser
+        # Use structured output for robust synonym generation
+        self.structured_llm = self.llm.with_structured_output(SynonymResponse)
         self.cache: Dict[str, List[str]] = self._load_cache()
 
     def _load_cache(self) -> Dict[str, List[str]]:
@@ -75,13 +75,14 @@ class SynonymGenerator:
 
         logger.info(f"Generating synonyms for node {code} ({label}) - async")
         try:
-            result = await self.chain.ainvoke({
+            prompt_with_inputs = await SYNONYM_PROMPT.ainvoke({
                 "code": code,
                 "label": label,
                 "description": description,
                 "path": path
             })
-            synonyms = result.get("synonyms", [])
+            result = await self.structured_llm.ainvoke(prompt_with_inputs)
+            synonyms = result.synonyms
             self.cache[code] = synonyms
             self._save_cache()
             return synonyms
@@ -96,13 +97,14 @@ class SynonymGenerator:
 
         logger.info(f"Generating synonyms for node {code} ({label}) - sync")
         try:
-            result = self.chain.invoke({
+            prompt_with_inputs = SYNONYM_PROMPT.invoke({
                 "code": code,
                 "label": label,
                 "description": description,
                 "path": path
             })
-            synonyms = result.get("synonyms", [])
+            result = self.structured_llm.invoke(prompt_with_inputs)
+            synonyms = result.synonyms
             self.cache[code] = synonyms
             self._save_cache()
             return synonyms
