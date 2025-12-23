@@ -13,6 +13,7 @@ class OntologyNode(BaseModel):
     description: str
     has_children: bool = False
     synonyms: List[str] = []
+    depth: int = 0
 
 class BaseOntology(ABC):
     """Abstract base class for all ontologies used by ORACLE."""
@@ -20,14 +21,14 @@ class BaseOntology(ABC):
     @abstractmethod
     def get_roots(self) -> List[OntologyNode]:
         """Return the top-level nodes of the ontology."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_children(self, parent_code: str) -> List[OntologyNode]:
         """Return the immediate children of a given node code."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_node(self, code: str) -> Optional[OntologyNode]:
         """Return a specific node by its code."""
-        pass
+        raise NotImplementedError

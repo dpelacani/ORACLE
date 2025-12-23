@@ -78,7 +78,8 @@ class MSCOntology(BaseOntology):
                 self.nodes[root_id] = OntologyNode(
                     code=root_id,
                     label=entry['label'],
-                    description=entry['description']
+                    description=entry['description'],
+                    depth=1
                 )
                 self.roots.append(root_id)
                 continue
@@ -93,7 +94,8 @@ class MSCOntology(BaseOntology):
                 self.nodes[code] = OntologyNode(
                     code=code,
                     label=entry['label'],
-                    description=entry['description']
+                    description=entry['description'],
+                    depth=2
                 )
                 continue
 
@@ -107,7 +109,8 @@ class MSCOntology(BaseOntology):
                 self.nodes[code] = OntologyNode(
                     code=code,
                     label=entry['label'],
-                    description=entry['description']
+                    description=entry['description'],
+                    depth=3
                 )
                 continue
 
